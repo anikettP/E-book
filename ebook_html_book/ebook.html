@@ -1,70 +1,1391 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>A Drop in the Desert</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
+
+
 
   <style>
-    /* ================= EXISTING CSS — UNCHANGED ================= */
-    /* (Everything you pasted before remains EXACTLY the same) */
+    /* =====================================================
+       GLOBAL VARIABLES & BASE
+    ===================================================== */
+    /* =====================================================
+   1. ROOT VARIABLES (COLORS + SPACING)
+===================================================== */
+    :root {
+      --page-bg: #ffffff;
+      --ink: #1f1f1f;
+      --accent: #d4651c;
 
-    /* ================= ADDITION : WATER – IMPACT ================= */
+      --body-font: 'Libre Baskerville', Georgia, serif;
+      --heading-font: 'Playfair Display', serif;
 
-    #page-impact {
+      --body-size: 15.5px;
+      --body-line: 1.65;
+
+      --h1-size: 2.6rem;
+      --h2-size: 1.3rem;
+    }
+
+    /* =====================================================
+   2. GLOBAL RESET & BASE
+===================================================== */
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #f2f2f2;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--body-font);
+      font-size: var(--body-size);
+      line-height: var(--body-line);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* =====================================================
+   3. GENERIC BOOK PAGE
+===================================================== */
+    .page {
+      width: min(1200px, 96vw);
+      aspect-ratio: 16 / 10;
+      margin: 4rem auto;
+      background: var(--page-bg);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+      padding: 3rem;
+    }
+
+    /* =====================================================
+   4. TYPOGRAPHY SYSTEM
+===================================================== */
+
+    /* Headings */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--heading-font);
+      font-weight: 700;
+      margin: 0 0 1.4rem;
+    }
+
+    h1 {
+      font-size: var(--h1-size);
+      color: var(--accent);
+    }
+
+    h2 {
+      font-size: var(--h2-size);
+    }
+
+    /* Paragraphs */
+    p {
+      margin: 0 0 1.1rem;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    /* Author / emphasis */
+    .author {
+      font-style: normal;
+      margin-top: 1.8rem;
+    }
+
+    /* Drop cap utility (used later per page) */
+    .dropcap::first-letter {
+      float: left;
+      font-family: var(--heading-font);
+      font-size: 3.4rem;
+      line-height: 1;
+      padding-right: 0.4rem;
+      font-weight: 700;
+    }
+
+    /* =====================================================
+   PAGE 1 — PREFACE (FINAL / PRINT-STYLE STATIC LAYOUT)
+===================================================== */
+
+    /* ===== OUTER PAGE (WHITE MARGIN) ===== */
+    .video-hotspot {
+      position: absolute;
+      top: 280px;
+      left: 770px;
+      width: 200px;
+      height: 120px;
+      cursor: pointer;
+    }
+
+    .page-preface {
+      position: relative;
+      width: 1200px;
+      height: 750px;
+      margin: 1rem auto;
+      /* Reduced margin */
+
+      background: #ffffff;
+      padding: 18px;
+
+      border: none;
+      /* Removed solid border for custom corners */
+
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      transform-origin: top center;
+    }
+
+    /* ===== INNER CANVAS (IMAGE + CONTENT) ===== */
+    .preface-canvas {
+      position: relative;
+      width: 100%;
+      height: 100%;
+
+      background-image: url("assets/images/preface.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      outline: none;
+      /* Removed interior outline */
+
+      overflow: hidden;
+    }
+
+    /* ===== CORNER CROP MARKS (SHARED) ===== */
+    .page-preface,
+    .origins-page,
+    .cultural-page-1 {
+      background:
+        linear-gradient(to right, #000 2px, transparent 2px) 0 0,
+        linear-gradient(to bottom, #000 2px, transparent 2px) 0 0,
+        linear-gradient(to left, #000 2px, transparent 2px) 100% 0,
+        linear-gradient(to bottom, #000 2px, transparent 2px) 100% 0,
+        linear-gradient(to right, #000 2px, transparent 2px) 0 100%,
+        linear-gradient(to top, #000 2px, transparent 2px) 0 100%,
+        linear-gradient(to left, #000 2px, transparent 2px) 100% 100%,
+        linear-gradient(to top, #000 2px, transparent 2px) 100% 100%;
+
+      background-repeat: no-repeat;
+      background-size: 24px 24px;
+      /* Background Image fallback if needed, but page-preface is outer. */
+      background-color: #ffffff;
+    }
+
+    /* ===== TEXT OVERLAY (SKY SAFE ZONE) ===== */
+    .preface-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      /* Dynamic height to auto-fit text */
+      height: auto;
+      min-height: 55%;
+      padding: 48px;
+
+      /* Increased transparency for better image visibility */
+      background: linear-gradient(to bottom,
+          rgba(200, 216, 230, 0.70) 0%,
+          rgba(200, 216, 230, 0.50) 65%,
+          rgba(200, 216, 230, 0.0) 100%);
+
+      color: #111;
+      z-index: 2;
+    }
+
+    /* ===== TITLE ===== */
+    .preface-title {
+      font-family: "Playfair Display", serif;
+      font-size: 46px;
+      color: #e05a1f;
+      margin-bottom: 24px;
+    }
+
+    /* ===== STATIC 3 COLUMNS (MANUAL FLEX) ===== */
+    .preface-columns-manual {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 42px;
+
+      font-family: "Libre Baskerville", serif;
+      font-size: 12.4px;
+      /* Final reduction for clearance */
+      line-height: 1.42;
+      /* Compact leading */
+    }
+
+    .p-col {
+      flex: 1;
+    }
+
+    .p-col p {
+      margin-bottom: 8px;
+      /* Minimal paragraph spacing */
+    }
+
+    /* ===== DROP CAP ===== */
+    .dropcap::first-letter {
+      float: left;
+      font-size: 54px;
+      line-height: 0.95;
+      padding-right: 8px;
+      font-family: "Playfair Display", serif;
+      color: #000;
+    }
+
+    /* Specific Dropcap style for Origins if different? Re-using generic. */
+
+    /* ===== AUTHOR (FULL WIDTH) ===== */
+    /* ===== AUTHOR (IN COLUMN 3) ===== */
+    .author {
+      margin-top: 24px;
+      font-style: normal;
+    }
+
+    /* ===== HINDI QUOTE (ONLY OVER IMAGE) ===== */
+    .hindi-quote {
+      position: absolute;
+      left: 32px;
+      bottom: 28px;
+
+      font-size: 18px;
+      line-height: 1.4;
+      color: #ffffff;
+
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+      z-index: 3;
+    }
+
+    /* =====================================================
+   RESPONSIVE SCALING (NO COLUMN CHANGE)
+===================================================== */
+
+    @media (max-width: 1200px) {
+
+      .page-preface,
+      .origins-page {
+        transform: scale(calc(100vw / 1200));
+      }
+    }
+
+    /* =====================================================
+   6. ORIGINS – IMAGE + VIDEO PAGE (PAGE 2)
+===================================================== */
+    .origins-page {
+      position: relative;
+      width: 1200px;
+      height: 750px;
+      margin: 1rem auto;
+      padding: 30px 40px;
+      /* Reduced padding */
+
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      /* Fixed left width, rest flexible */
+      gap: 30px;
+
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      transform-origin: top center;
+    }
+
+    /* Left Panel (Logo + Collage) */
+    .origins-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .origins-collage img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Right Panel (Header + Text) */
+    .origins-right {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .origins-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      height: auto;
+      /* Let content dictate height */
+    }
+
+    .origins-label-box {
+      background-color: #d4651c;
+      /* Orange */
+      color: white;
+      text-transform: uppercase;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      padding: 12px 24px;
+      letter-spacing: 1px;
+      align-self: flex-start;
+      margin-top: 10px;
+    }
+
+
+
+    /* Video inside 2nd Column */
+    .origins-video-inline {
+      position: relative;
+      width: 100%;
+      /* Full width of the column */
+      aspect-ratio: 16 / 9;
+      margin-bottom: 1rem;
+
+      background-color: #000;
+      border: 1px solid #999;
+    }
+
+    .origins-video-inline img {
+      display: none;
+      /* Hide if not needed, or use JS to handle */
+    }
+
+    .origins-video img {
+      display: none;
+      /* Hide broken image if present in HTML */
+    }
+
+    .video-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 8px;
+      text-align: center;
+      color: white;
+      background: rgba(0, 0, 0, 0.6);
+      font-family: 'Libre Baskerville', serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .origins-text {
+      display: flex;
+      /* Flexbox for manual columns */
+      gap: 30px;
+
+      font-family: 'Libre Baskerville', serif;
+      font-size: 11.8px;
+      line-height: 1.5;
+      text-align: justify;
+      height: auto;
+      /* Allow content to dictate height, or fix if needed */
+    }
+
+    .origins-col {
+      flex: 1;
+      /* Equal width */
+    }
+
+    .origins-text p {
+      margin-bottom: 12px;
+    }
+
+    .highlight-orange {
+      color: #d4651c;
+      font-weight: 700;
+      font-style: italic;
+      /* "my life turned upside down" looks italic/bold */
+    }
+
+    /* =====================================================
+   7. ORIGINS – TEXT CONTINUATION (PAGE 3)
+===================================================== */
+    .origins-page-2 {
+      display: flex;
+      align-items: center;
+    }
+
+    .origins-columns {
+      column-count: 2;
+      column-gap: 2.6rem;
+    }
+
+    /* =====================================================
+   8. CULTURAL SETTING – PAGE 1 & 2
+===================================================== */
+    .cultural-page-1,
+    #page-cultural-2 {
+      background: #ffffff;
+    }
+
+    .cultural-text {
+      column-count: 2;
+      column-gap: 2.4rem;
+    }
+
+    .cultural-text p {
+      break-inside: avoid;
+    }
+
+    /* =====================================================
+   9. TECHNOLOGY – PAGE 1 & 2
+===================================================== */
+    #page-technology-1,
+    #page-technology-2 {
+      background: #ffffff;
+    }
+
+    #page-technology-1 p,
+    #page-technology-2 p {
+      break-inside: avoid;
+    }
+
+    /* =====================================================
+   10. MEDIA (IMAGES & VIDEO – GENERIC)
+===================================================== */
+    figure {
+      margin: 1.6rem 0;
+    }
+
+    figure img {
+      width: 100%;
+      display: block;
+    }
+
+    figcaption {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 0.3rem;
+    }
+
+    .media iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: none;
+    }
+
+    /* =====================================================
+   11. RESPONSIVE (LAST, AFTER DESKTOP IS PERFECT)
+===================================================== */
+    /* =====================================================
+       PAGE 4 : WATER – CULTURAL SETTING 1 (FINAL)
+    ===================================================== */
+    /* =====================================================
+       PAGE 4 : WATER – CULTURAL SETTING 1 (FINAL)
+    ===================================================== */
+    .cultural-page-1 {
+      position: relative;
+      width: 1200px;
+      height: 750px;
+      margin: 1rem auto;
+      padding: 0;
+      padding-top: 20px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-bottom: 20px;
+
+      display: grid;
+      /* Grid: Left Img | Text 1 | Text 2 | Right Illus */
+      grid-template-columns: 190px 1fr 1fr 280px;
+      grid-template-rows: min-content 1fr;
+      /* Row 1: Header, Row 2: Content */
+      gap: 15px;
+      align-items: stretch;
+      /* Stretch items to fill height */
+
+      background: #ffffff;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      transform-origin: top center;
+    }
+
+    /* Header spans across top-left visual area (cols 1-3) */
+    .cultural-header-row {
+      grid-column: 1 / 4;
+      grid-row: 1;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .cultural-header-box {
+      background-color: #d4651c;
+      color: white;
+      padding: 10px 20px;
+      width: auto;
+      min-width: 300px;
+    }
+
+    .cultural-header-box span {
+      display: block;
+      font-family: 'Libre Baskerville', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      line-height: 1;
+      opacity: 0.95;
+    }
+
+    .cultural-header-box strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .cultural-header-logo {
+      height: 55px;
+      width: auto;
+      margin-right: 0;
+      margin-top: 5px;
+    }
+
+    /* Col 1: Left Image Strip */
+    .cultural-left-col {
+      grid-column: 1;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cultural-left-col img {
+      width: 100%;
+      height: auto;
+      flex: 1;
+      /* Take up remaining space */
+      object-fit: cover;
+      /* Ensure it covers if aspect ratio varies, or just fill */
+      display: block;
+      border-radius: 2px;
+    }
+
+    /* Col 2: Text Column 1 */
+    .cultural-text-col-1 {
+      grid-column: 2;
+      grid-row: 2;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 11.2px;
+      line-height: 1.5;
+      text-align: justify;
+    }
+
+    .cultural-text-col-1 p {
+      margin-bottom: 8px;
+    }
+
+    .cultural-text-col-1 .dropcap {
+      float: left;
+      font-family: 'Playfair Display', serif;
+      font-size: 4.8rem;
+      line-height: 0.8;
+      padding-right: 8px;
+      padding-top: 4px;
+      color: #1f1f1f;
+    }
+
+    /* Col 3: Text Column 2 (Feature) */
+    .cultural-text-col-2 {
+      grid-column: 3;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 11.2px;
+      line-height: 1.5;
+      text-align: justify;
+      height: 100%;
+      /* Fill the grid cell */
+    }
+
+    .cultural-text-col-2 p {
+      margin-bottom: 8px;
+    }
+
+    /* Video Section */
+    .video-container-small {
+      width: 100%;
+      position: relative;
+      background: #000;
+      aspect-ratio: 16 / 9;
+      margin-top: auto;
+      /* Pushes video to the very bottom */
+    }
+
+    .video-container-small iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .video-caption-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 0.6rem;
+      text-align: center;
+      padding: 3px;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    /* Col 4: Right Illustration */
+    .cultural-right-col {
+      grid-column: 4;
+      grid-row: 1 / 3;
+      /* Spans Header + Content rows */
+      display: flex;
+      align-items: flex-end;
+      height: 100%;
+      margin-top: -20px;
+      /* Pull up into padding area slightly if needed, or matched visually */
+    }
+
+    .cultural-right-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    /* Link Styles for Highlighted Text */
+    a.highlight-orange,
+    a.highlight-orange-bold {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    a.highlight-orange:hover,
+    a.highlight-orange-bold:hover {
+      text-decoration: none;
+      opacity: 0.8;
+    }
+
+    /* =====================================================
+      PAGE 5 : WATER – CULTURAL SETTING 2 (FINAL)
+    ===================================================== */
+    .cultural-page-2 {
       position: relative;
       width: 1200px;
       height: 750px;
       margin: 1rem auto;
       padding: 30px 40px;
 
-      background-image: url("assets/images/impact1bg.png");
-      background-size: cover;
-      background-position: center;
+      background-color: #ffffff;
+      background-image: url("assets/images/cultural-setting-2-bg.jpg");
+      background-size: 100% 100%;
       background-repeat: no-repeat;
 
-      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
       transform-origin: top center;
-
-      color: #f2f2f2;
     }
 
-    .impact-columns {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3rem;
-      margin-top: 120px;
-      padding: 0 60px;
+    /* Content Wrapper */
+    .cultural-2-content {
+      position: relative;
+      width: 45%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      z-index: 2;
     }
 
-    .impact-col {
+    /* Header specific to this page */
+    .cultural-2-header {
+      margin-bottom: 2rem;
+    }
+
+    /* Text Columns */
+    .cultural-2-text {
       font-family: 'Libre Baskerville', serif;
-      font-size: 12px;
-      line-height: 1.6;
+      font-size: 11.5px;
+      line-height: 1.45;
       text-align: justify;
+      color: #1f1f1f;
     }
 
-    #page-impact .dropcap::first-letter {
-      color: #ffffff;
+    .cultural-2-text p {
+      margin-bottom: 12px;
+    }
+
+    .highlight-orange-bold {
+      color: #d4651c;
+      font-weight: 700;
+    }
+
+
+
+    /* =====================================================
+      PAGE 1.5 : TITLE / TABLE OF CONTENTS (NEW)
+    ===================================================== */
+    .page-title-toc {
+      position: relative;
+      width: 1200px;
+      height: 750px;
+      margin: 1rem auto;
+
+      /* User provided background image containing Map + Left Text + Space for TOC */
+      background-image: url("assets/images/title.jpeg");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Container for TOC Content - Positioned on the RIGHT "dedicated space" */
+    .toc-overlay-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 38%;
+      /* Adjust based on "dedicated space" size */
+      height: 100%;
+      /* Push content down below the Puppet/Title in background image */
+      padding: 0 3rem 1rem 1rem;
+      padding-top: 230px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      /* Start from top padding */
+      text-align: center;
+      color: #7b4a12;
+    }
+
+    .toc-puppet {
+      margin-bottom: 0.2rem;
+    }
+
+    .toc-puppet img {
+      height: 130px;
+      width: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .toc-subtitle {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #1f1f1f;
+    }
+
+    .toc-divider {
+      width: 90%;
+      border: 0;
+      border-top: 1px solid #7b4a12;
+      margin: 0.4rem 0;
+      opacity: 0.6;
+    }
+
+    .toc-link-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #7b4a12;
+      transition: transform 0.2s, opacity 0.2s;
+      margin: 0.2rem 0;
+    }
+
+    .toc-link-item:hover {
+      transform: scale(1.02);
+      opacity: 0.8;
+    }
+
+    .toc-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .toc-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      text-transform: uppercase;
+      margin-top: 1px;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .toc-sub {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #d4651c;
+      margin-top: 0px;
+    }
+
+    .toc-footer {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      font-style: italic;
+      line-height: 1.3;
+      opacity: 0.9;
     }
   </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     ALL PREVIOUS SECTIONS (PREFACE, TOC, ORIGINS,
-     CULTURAL, TECHNOLOGY) — UNCHANGED
+  <section id="page-preface" class="page-preface">
+
+    <!-- INNER CANVAS (IMAGE + BORDER) -->
+    <div class="preface-canvas">
+
+      <!-- TEXT SAFE ZONE -->
+      <div class="preface-overlay">
+
+        <h1 class="preface-title">Preface</h1>
+
+        <div class="preface-columns-manual">
+
+          <!-- COLUMN 1 -->
+          <div class="p-col">
+            <p class="dropcap">
+              This is the first in a series of e-books that begin talking of the Barefoot experience.
+              I hope it can capture the issues, the colour, energy, laughter and joy of working together.
+              Community work is not a chore. Sharing within a collective, as equals, brings extraordinary
+              learning. I hope you are able to share this e-book as well.
+            </p>
+            <p>
+              I have always wanted to make my ideas work. But I also know that they are not just my ideas,
+              ever. They are shared ideas. These 58 years of work, mainly with poor people, have taught me
+            </p>
+          </div>
+
+          <!-- COLUMN 2 -->
+          <div class="p-col">
+            <p class="indent-fix">
+              how important it is to listen. Our stories, if heard or seen, may make a difference.
+              This e-book is a result of many stories and many journeys, as I went from being a committed
+              social worker in the early 1970s looking at integrated development in Ajmer district of
+              Rajasthan, to being a consultant in the Planning Commission, when I traveled extensively all over India
+              and,
+              later, all over the world. I went to remote villages in over 90 countries, to identify village women
+              who could come and be trained in Tilonia as Barefoot Solar Engineers. These journeys have
+              always been with communities and with people who are committed to similar ideas and ideals.
+            </p>
+            <p>
+              Barefoot College, Tilonia – home to me and to my colleagues – has provided space for
+              people to learn from the underprivileged and
+            </p>
+          </div>
+
+          <!-- COLUMN 3 -->
+          <div class="p-col">
+            <p class="indent-fix">
+              the poor. You do not need a degree to be a professional, or a university education to make
+              policy. It has been an exciting journey full of learning, successes and failures. In Tilonia, we
+              value failure, and see it as a great opportunity for education and growth. It makes us work till
+              we find a solution, despite adverse opinion. You keep going. As Mahatma Gandhi said: “First they
+              ignore you, then they laugh at you, then they fight you, then you win.”
+            </p>
+            <p>
+              We all know that rural India and the rural world make up a large percentage of the global
+              population. And yet they have to fight for resources and recognition. It is time we bridged
+              this gap.
+            </p>
+            <p>
+              This e-book is for you to read, listen to and see. I hope people’s lives inspire you to discover new
+              possibilities with them.
+            </p>
+            <p class="author">
+              Our journey can be your journey.<br>
+              <strong>Bunker Roy</strong>
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- HINDI QUOTE (IMAGE ZONE ONLY) -->
+      <div class="hindi-quote">
+        रौशनी बदनाम न हो जाए इसी डर से<br>
+        रख दिया है दीया तूफ़ाँ के सामने
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+
+  <!-- =====================================================
+     PAGE 1.5 : TITLE / TABLE OF CONTENTS (NEW)
+     ===================================================== -->
+  <section class="page page-title-toc" id="page-title">
+
+    <!-- Overlay Content on the Right -->
+    <div class="toc-overlay-right">
+
+      <!-- LINK 1 -->
+      <a href="#page-origins-1" class="toc-link-item">
+        <span class="toc-num">1</span>
+        <span class="toc-main">Barefoot College:</span>
+        <span class="toc-sub">ORIGINS</span>
+      </a>
+      <hr class="toc-divider">
+
+      <!-- LINK 2 -->
+      <a href="#page-cultural-1" class="toc-link-item">
+        <span class="toc-num">2</span>
+        <span class="toc-main">THE CULTURAL SETTING</span>
+        <span class="toc-sub">in which it worked</span>
+      </a>
+      <hr class="toc-divider">
+
+      <!-- LINK 3 -->
+      <a href="#page-technology-1" class="toc-link-item">
+        <span class="toc-num">3</span>
+        <span class="toc-main">TECHNOLOGIES</span>
+        <span class="toc-sub">used in combatting water scarcity</span>
+      </a>
+      <hr class="toc-divider">
+
+      <!-- LINK 4 -->
+      <a href="#page-impact" class="toc-link-item">
+        <span class="toc-num">4</span>
+        <span class="toc-main">IMPACT</span>
+        <span class="toc-sub">of the interventions</span>
+      </a>
+      <hr class="toc-divider">
+
+      <p class="toc-footer">
+        Click on any link (photo or highlighted text)<br>
+        for further information
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+     PAGE 2 : ORIGINS – IT ALL BEGAN WITH WATER (FINAL)
 ===================================================== -->
+  <section class="page origins-page" id="page-origins-1">
+
+    <!-- LEFT PANEL: ORIGINS Label + LOGO + COLLAGE -->
+    <div class="origins-left">
+      <!-- ORANGE LABEL -->
+      <div class="origins-label-box" style="margin-bottom: 20px;">
+        ORIGINS
+      </div>
+
+      <div class="origins-collage">
+        <img src="assets/images/barefoot-logo.png" alt="Barefoot College Origins Collage">
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: CONTENT -->
+    <div class="origins-right">
+
+      <!-- TOP ROW: HEADER BOX + VIDEO -->
 
 
-<!-- ================= PAGE : WATER – IMPACT (FINAL) ================= -->
+      <!-- TEXT COLUMNS (Manual Split) -->
+      <div class="origins-text">
+        <div class="origins-col">
+          <p>
+            <span class="dropcap">W</span>hen I made the unusual choice to go to Bihar during one of its worst
+            famines in 1966, <a href="#page-preface" class="highlight-orange">my life turned upside down.</a> I decided
+            to work and
+            live
+            in a village. Without regret, I left everything behind – the Doon School, St. Stephens, and a promising
+            career
+            as India’s three-time national squash champion.
+          </p>
+          <p>
+            For the first two years I worked with a drilling team, deepening wells and shocking my conventional family
+            in the process – my mother most of all. From this work I learnt in a very practical way to understand the
+            dangers that workers face – undertaking the perilous task of sitting in a basket and being lowered into a
+            well, to set dynamite that would blast for water. Learning by doing, indeed.
+          </p>
+          <p>
+            In 1972, after many small experiments in Ajmer in the District of Rajasthan, I came to a village – Tilonia
+            –
+            with
+            Meghraj, a fellow driller. In that same year we went to look at an abandoned Government campus, took it on
+            rent and set up the Barefoot College, then called SWRC (Social Work and Research Centre).
+          </p>
+          <p>
+            The conviction that drove me, and remains my message, is that you have to listen to the local people. They
+            know what
+            their problems are. They know the solutions, too, and we must support them to shape these ideas and bring
+            them
+            to fruition.
+          </p>
+          <p>
+            The College worked with, and for, the poor. I realised from the start that people needed to own and steer
+            the
+            institution. Support came from
+          </p>
+        </div>
+
+        <div class="origins-col">
+
+          <!-- VIDEO MOVED HERE (Ref Image: Top of Col 2) -->
+          <div class="origins-video-inline">
+            <!-- Using same iframe/preview structure -->
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/QP7px57pGag?controls=0"
+              title="Sage of Barefoot College" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen style="position: absolute; top:0; left:0; z-index: 1;">
+            </iframe>
+            <!-- Fallback/Preview Image -->
+            <img src="assets/images/video-sage.jpg" alt="Video Thumbnail"
+              style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2; pointer-events: none; display: block;">
+
+            <div class="video-caption" style="z-index: 3;">
+              VIDEO:<br>SAGE OF BAREFOOT COLLEGE
+            </div>
+          </div>
+
+
+          <p>
+            several young urban “professionals” who shared my faith. They had become disillusioned with formal
+            learning,
+            and came to the Barefoot College to join me in this mission.
+          </p>
+          <p>
+            In arid Rajasthan, the constant, and principal cry was: “WATER!” Working with unlettered, ordinary people,
+            the Barefoot College team began by identifying new water sources through <a href="#tech-surveys"
+              class="highlight-orange">surveys</a>, as well as
+            experimenting with ways to recharge open wells and hand pumps. The College then went on to share engineering
+            skills with local people, revive the ancient practices of rainwater harvesting and set up reverse osmosis
+            plants.
+          </p>
+          <p>
+            Many challenges sometimes needed crazy solutions! And some of those just didn’t work – such as our attempt
+            to make our own <a href="#page-technology-1" class="highlight-orange">windmills</a>
+            for pumping up water. But in tackling them people learnt from their outcomes. In the Barefoot philosophy,
+            there was no such word as failure.
+          </p>
+          <p>
+            From water divining to setting up handpumps, untrained village men, and later women, learnt technical
+            skills,
+            becoming water-warriors and hand pump mistris. The process was natural, logical and self-sustaining.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+     PAGE 4 : WATER – CULTURAL SETTING 1 (FINAL)
+===================================================== -->
+  <section class="page cultural-page-1" id="page-cultural-1">
+
+    <!-- HEADER ROW (Spans Cols 1-3) -->
+    <div class="cultural-header-row">
+      <div class="cultural-header-box">
+        <span>WATER:</span>
+        <strong>CULTURAL SETTING-1</strong>
+      </div>
+      <img src="assets/images/barefootlogo.png" alt="Barefoot College" class="cultural-header-logo">
+    </div>
+
+    <!-- COL 1: LEFT SIDEBAR (Merged Img + Video) -->
+    <div class="cultural-left-col">
+      <img src="assets/images/cultural_Setting-1_I1.png" alt="Desert scenes collage">
+
+      <!-- COL 1: LEFT SIDEBAR (Image Only) -->
+      <div class="cultural-left-col">
+        <img src="assets/images/cultural_Setting-1_I1.png" alt="Desert scenes collage">
+      </div>
+    </div>
+
+    <!-- COL 2: TEXT COLUMN 1 -->
+    <div class="cultural-text-col-1">
+      <p>
+        <span class="dropcap">F</span>abled Rajasthan is rich in colour, kings, palaces and temples, history
+        and tradition. It is also a land of climate extremes, and is India’s
+        driest state. From May to August the relentless sun bakes soil and people
+        alike. From June to September, monsoons give relief and restore life to
+        parched crops.
+      </p>
+
+      <p>
+        But the rains do not always come. Drought brings famine, death and fear.
+        But hard as life can be, for thousands of years monsoons have replenished
+        underground water, enough to sustain life even through a period of
+        sustained drought.
+      </p>
+
+      <p>
+        To desert dwellers water is a priceless treasure, and the people of Rajasthan have always revered it.
+      </p>
+
+      <!-- CAMEL IMAGE & VIDEO (Inserted Here) -->
+      <div class="camel-video-block" style="margin-top: 1rem;">
+        <img src="assets/images/camel.png" alt="Camels at water source"
+          style="width: 100%; display: block; margin-bottom: 5px;">
+
+        <!-- VIDEO MOVED HERE -->
+        <div class="video-container-small" style="position: relative; cursor: pointer;"
+          onclick="window.open('https://www.youtube.com/watch?v=f-b2nuII-fo', '_blank')">
+          <!-- THUMBNAIL IMAGE (Using camel or other placeholder if video specific thumbnail not avail, 
+               or better: use a solid color with text if no thumb. 
+               Actually, I'll use 'video-sage.jpg' if it exists, or just a colored block with Play icon.
+               User uploaded image shows a thumbnail of men sitting. I don't have that file.
+               I will use a placeholder div that LOOKS like a video. -->
+          <div
+            style="width: 100%; height: 0; padding-bottom: 56.25%; background: #000; position: relative; overflow: hidden;">
+            <!-- Play Button Overlay -->
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                          width: 50px; height: 50px; background: rgba(255,0,0,0.8); border-radius: 50%; 
+                          display: flex; align-items: center; justify-content: center;">
+              <span style="color: white; font-size: 24px;">▶</span>
+            </div>
+            <span
+              style="position: absolute; bottom: 10px; left: 10px; color: white; font-size: 12px; background: rgba(0,0,0,0.6); padding: 2px 5px;">PAANI
+              KA SAVAL</span>
+          </div>
+          <div class="video-caption-label" style="text-align: center; margin-top: 5px;">VIDEO:<br>PAANI KA SAVAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 3: TEXT COLUMN 2 (Feature Col) -->
+    <div class="cultural-text-col-2">
+      <p style="margin-top: 0;">
+        Traditional songs about water echo across the land. Water was what our forefathers looked for when they
+        chose to settle, by a river or a lake. Some people say that in past geological times
+        Rajasthan was a sea – a sea which has left fossils. Not only does it mean life itself, but water –
+        especially clean, pure, potable water – is rare, and traditional ways of collecting it have increasing problems.
+      </p>
+
+      <p>
+        In the early 70s, water was a problem for the whole community, and very high on the priority
+        list. For those who came from urban India, going to a village was like stepping back in a
+        time machine. It was said it’s easier to drink milk than water, which was far harder to get.
+        Women walked miles to fetch water – for drinking, bathing, cooking and for the animals. Building a
+        trough for animals and making a ‘piao’, a water point managed by the upper caste for humans,
+        were crucially important and highly valued actions for piety and charity.
+      </p>
+
+      <p>
+        The lack of water had an enormous impact on health and hygiene, and children’s diseases
+        abounded. In country villages infant deaths were often thought to be caused by witches’
+        curses, rather than water that was unsafe to drink whether through excess fluorides or other
+        chemicals, or having been contaminated by animals. The water table dropped drastically
+        from 60 feet to over 300 feet over the years.
+      </p>
+    </div>
+
+    <!-- COL 4: RIGHT ILLUSTRATION -->
+    <!-- COL 4: RIGHT ILLUSTRATION -->
+    <!-- COL 4: RIGHT ILLUSTRATION -->
+    <div class="cultural-right-col" style="height: 100%; display: flex; align-items: flex-end;">
+      <img src="assets/images/woomen.png" alt="Women carrying water pots"
+        style="width: 100%; height: auto; object-fit: cover; display: block; padding-bottom: 2rem;">
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+     PAGE 5 : WATER – CULTURAL SETTING 2 (FINAL)
+===================================================== -->
+  <section class="page cultural-page-2" id="page-cultural-2">
+
+    <!-- LEFT CONTENT AREA (TEXT + HEADER) -->
+    <div class="cultural-2-content">
+
+      <div class="cultural-header-row cultural-2-header">
+        <div class="cultural-header-box">
+          <span>WATER:</span>
+          <strong>CULTURAL SETTING-2</strong>
+        </div>
+        <img src="assets/images/barefootlogo.png" alt="Barefoot College" class="cultural-header-logo">
+      </div>
+
+      <div class="cultural-2-text">
+        <p>
+          Every meeting within a community started with the problem of water.
+          Women demanded it for living, men for farming and livelihood. The
+          positioning of a well was a matter of great importance. It still is:
+          enormous effort might go into digging a new one, only for the diggers
+          to find the water is brackish and undrinkable. Access to water was power,
+          and the caste hierarchy made sure that water points and sweet water were
+          controlled by the upper caste; and the rich made sure that sweet water
+          accessed by the Dalits was taken over. Yet caste ruled over thirst and
+          people dared not touch water for fear of contamination, unless they knew
+          who had touched it before!
+        </p>
+
+        <p>
+          There was an interesting <a href="#tech-hpm" class="highlight-orange-bold">episode</a> when Barefoot College
+          workers
+          sank
+          a tube well for a handpump and when sweet water gushed out, the upper
+          castes used violence and unseemly methods to take control. If it were
+          not for the Barefooters, the handpump would have been lost to the
+          Dalits.
+        </p>
+
+        <p>
+          The Tilonia group was a development oasis, where people who had
+          traditional know-how and who understood water flow and availability
+          were invited into the discussion as equals. People knew where sweet
+          water was to be found, and the water diviner’s points always worked.
+          In later years <a href="#tech-surveys" class="highlight-orange-bold">a trained geologist also water
+            divined.</a>
+        </p>
+
+        <p>
+          Government, for its part, made water a high priority in policy, but
+          failed in implementation for two reasons: the inefficiency of the
+          lower bureaucracy and the non-involvement of the community.
+        </p>
+
+        <p>
+          The Tilonia group began listening to women and their stories, and
+          drew the men into discussions about weather, climate and the
+          indicators for a good or bad monsoon. These intense discussions
+          shaped the water surveys that the group undertook.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Video Hotspot -->
+    <div class="video-hotspot" onclick="alert('Video placeholder: Animated Movie - Every Drop Counts')"></div>
+
+  </section>
+
+
+
+
+
+
+
+  <!-- =====================================================
+     PAGE 6 : WATER – TECHNOLOGY 1 (FINAL)
+===================================================== -->
+  <section class="page" id="page-technology-1">
+
+    <!-- HEADER ROW (Standardized) -->
+    <div class="cultural-header-row">
+      <div class="cultural-header-box">
+        <span>WATER:</span>
+        <strong>TECHNOLOGY-1</strong>
+      </div>
+      <img src="assets/images/barefootlogo.png" alt="Barefoot College" class="cultural-header-logo">
+    </div>
+
+    <div class="technology-text">
+
+      <p class="dropcap">
+        At the time we started working with water, in theory rural villages
+        had access to it through established government systems that included
+        traditional wells and open sources. In practice there were real
+        difficulties with these. Open water was shared with animals, so it
+        was often contaminated. The women’s work (because it was always the
+        women who had the job of fetching water) often involved pulling water
+        out with a rope from deep wells into pots. It was arduous and
+        exhausting.
+      </p>
+
+      <p id="tech-surveys">
+        From the beginning, Barefoot College made it a central and urgent
+        priority to tackle the immense problem of getting potable drinking
+        water to the poor, and to far-flung rural desert communities. Over the
+        years Barefoot College experimented with what others thought were
+        crazy ideas. We began with geological technical surveys, the use of
+        which gained the approval of the Rajasthan Ground Water Board.
+      </p>
+
+      <p>
+        We tried and tested new and different methods of open well and hand
+        pump recharge, including UNICEF’s Three-Tier System. But always,
+        conversations with people with abundant knowledge remained a focus
+        for understanding traditional methods of water conservation. We had
+        great respect for the competence of local people and worked hard to
+        demystify technology to make it accessible to them.
+      </p>
+
+      <p id="tech-hpm">
+        Our beliefs were vindicated when, in the face of problems with the
+        Three-Tier System, we transferred engineering skills to local people.
+        This resulted in the Hand Pump Mistri or HPM, and was very successful.
+      </p>
+
+      <p>
+        Throughout the 1980s and 1990s Rajasthan continued to adopt Barefoot
+        College’s Hand Pump Mistri local maintenance scheme. It generated
+        employment among young village people, gave them self-respect and
+        freed villages of at least one branch of government bureaucracy. It
+        also dealt with gender, caste and untouchability issues, as many of
+        the mistris were women and Dalits.
+      </p>
+
+    </div>
+
+    <!-- MEDIA PLACEHOLDERS (LOCKED FOR LATER POSITIONING) -->
+    <!-- COLORED PLACEHOLDER FOR MISSING IMAGE -->
+    <!-- COLORED PLACEHOLDER FOR MISSING IMAGE -->
+    <!-- Using camel.png momentarily to show layout until user provides technology1-img1.jpg -->
+    <div style="width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
+      <img src="assets/images/camel.png" alt="Placeholder for missing tech image"
+        style="width: 100%; max-height: 300px; object-fit: contain; border: 1px dashed #ccc;">
+    </div>
+
+    <div class="media">
+      <p><strong>VIDEO:</strong> Women Hand Pump Mistris</p>
+      <p><strong>VIDEO:</strong> Women Hand Pump Mistris</p>
+      <!-- Using generic YouTube embed as placeholder if specific video ID unknown, or keep empty if desired. 
+           Using a known ID from other pages for testing layout if needed, or keeping empty with border.
+           User said "below it a youtube video is given wit link make sure its preveiw is running".
+           I'll use the Paani Ka Saval ID (f-b2nuII-fo) as a placeholder or search for "Women Hand Pump Mistris" ID.
+           Actually, I'll stick to a placeholder message if I don't have the ID. -->
+      <div class="video-container-small" style="width: 100%; max-width: 600px; margin: 0 auto;">
+        <iframe src="https://www.youtube.com/embed/f-b2nuII-fo" title="Women Hand Pump Mistris (Placeholder Video)"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+        <div class="video-caption-label">VIDEO: Women Hand Pump Mistris (Preview)</div>
+      </div>
+    </div>
+
+  </section>
+
+
+
+
+
+
+
+
+<!-- ================= PAGE : WATER – IMPACT ================= -->
 <section class="page" id="page-impact">
 
+  <!-- HEADER ROW -->
   <div class="cultural-header-row">
     <div class="cultural-header-box">
       <span>WATER:</span>
@@ -73,134 +1394,186 @@
     <img src="assets/images/barefootlogo.png" alt="Barefoot College" class="cultural-header-logo">
   </div>
 
+  <!-- THREE COLUMN CONTENT (PDF STYLE) -->
   <div class="impact-columns">
 
     <!-- COLUMN 1 -->
     <div class="impact-col">
       <p>
-        <span class="dropcap">W</span>hen we started this journey, we knew it would
-        test our staying power, commitment and ingenuity. We had no strategic plan
-        but grew organically, always responsive to the ideas and strengths of a
-        people who depended on the effectiveness of their ideas if they were to
-        survive and meet their own basic human needs.
+        <span class="dropcap">W</span>hen we started this journey, we knew it
+        would test our staying power, commitment and ingenuity. We had no
+        strategic plan but grew organically, always responsive to the ideas
+        and strengths of a people who depended on the effectiveness of their
+        ideas if they were to survive and meet their own basic human needs.
       </p>
 
       <p>
-        At first water, food and shelter were the most pressing of these. But slowly,
-        as people made the connection between illness and contaminated water, their
-        needs shifted from ‘water’ to ‘safe drinking water’.
+        At first water, food and shelter were the most pressing of these.
+        But slowly, as people made the connection between illness and
+        contaminated water, their needs shifted from ‘water’ to ‘safe
+        drinking water’.
       </p>
 
       <p>
-        When you work by solving problems as they arise, a picture evolves, and you
-        begin to see how tightly survival, technology and development are linked and
-        interconnected with many aspects of people’s lives. This understanding is a
-        great part of the Barefoot College legacy.
+        When you work by solving problems as they arise, a picture evolves,
+        and you begin to see how tightly survival, technology and development
+        are linked and interconnected with many aspects of people’s lives.
+        This understanding is a great part of the Barefoot College legacy.
+      </p>
+
+      <p>
+        This ebook has traced the making of that legacy, which has taken us
+        through a broad spectrum of activities. They have included drilling
+        for groundwater, installing and maintaining handpumps, constructing
+        and deepening village ponds and dams, exploring ways to rejuvenate
+        existing wells and open water sources, making the most of rainwater
+        by harvesting it, and constructing reverse osmosis plants in
+        fluoride and arsenic-affected areas.
       </p>
     </div>
 
     <!-- COLUMN 2 -->
     <div class="impact-col">
       <p>
-        This ebook has traced the making of that legacy, which has taken us through
-        a broad spectrum of activities. They have included drilling for groundwater,
-        installing and maintaining handpumps, constructing and deepening village
-        ponds and dams, exploring ways to rejuvenate existing wells and open water
-        sources, making the most of rainwater by harvesting it, and constructing
-        reverse osmosis plants in fluoride and arsenic-affected areas.
+        It’s been a huge criss-cross of ideas and work with communities.
+        What began with one set of villages surrounding the Tilonia campus
+        spread beyond Rajasthan into other Indian states, and later moved
+        beyond India into many countries in the Global South, especially in
+        Africa, Latin America, and Southeast Asia.
       </p>
 
       <p>
-        It’s been a huge criss-cross of ideas and work with communities. What began
-        with one set of villages surrounding the Tilonia campus spread beyond
-        Rajasthan into other Indian states, and later moved beyond India into many
-        countries in the Global South, especially in Africa, Latin America, and
-        Southeast Asia.
+        Thanks to our diligent barefoot record-keepers, counting the numbers
+        has been easy and exciting. Watch Jokhim Chacha, the Barefoot College
+        mascot, lead you through its narration. It may sound impressive to
+        say that we have installed 1735 handpumps in Indian villages, or 27
+        community rainwater harvesting tanks in seven other countries.
+      </p>
+
+      <p>
+        Figures speak their own testimony. But as impressive as it may
+        sound, ‘tangible achievements’ are easy to measure and demonstrate.
+        But figures are only part of the story.
+      </p>
+
+      <p>
+        The rest is told in the lives of the people we set out to help, the
+        ones who live and struggle for survival every day.
       </p>
     </div>
 
     <!-- COLUMN 3 -->
     <div class="impact-col">
       <p>
-        Thanks to our diligent barefoot record-keepers, counting the numbers has been
-        easy and exciting. Watch Jokhim Chacha, the Barefoot College mascot, lead you
-        through its narration. It may sound impressive to say that we have installed
-        1735 handpumps in Indian villages, or 27 community rainwater harvesting tanks
-        in seven other countries.
+        Barefoot College assesses change by the improvement in people’s
+        lives, by seeing people’s self-confidence rise, by empowerment
+        being enabled and expectations being changed.
       </p>
 
       <p>
-        But figures are only part of the story. The rest is told in the lives of the
-        people we set out to help — the ones who live and struggle for survival every
-        day.
+        In practice, all markers of improvement matter. Barefoot leaves its
+        footprint in the visible, the tangible and in the improved quality
+        of life that people acknowledge with articulation and confidence.
       </p>
 
       <p>
-        Barefoot College assesses change by the improvement in people’s lives — by
-        seeing people’s self-confidence rise, by empowerment being enabled and
-        expectations being changed. In practice, all markers of improvement matter.
+        But the impact of the numbers of people we have trained as water
+        engineers, and the numbers of women who have become community
+        leaders, speaks more loudly than the numbers of hand-pumps we
+        have installed.
       </p>
     </div>
 
   </div>
+
 </section>
 
-<!-- ================= SWIPE SCRIPT — UNCHANGED ================= -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0;
-    const minSwipeDistance = 50;
+  <!-- =====================================================
+     SWIPE NAVIGATION SCRIPT
+===================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
 
-    document.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: false });
+      const minSwipeDistance = 50; // Minimum pixel distance for a swipe
 
-    document.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-      handleSwipe();
-    }, { passive: false });
+      document.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      }, { passive: false }); // passive: false allows preventing default if needed, though we primarily want to detect
 
-    function handleSwipe() {
-      const xDiff = touchEndX - touchStartX;
-      const yDiff = touchEndY - touchStartY;
-      if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > minSwipeDistance) {
-        xDiff < 0 ? goToNextPage() : goToPreviousPage();
-      }
-    }
+      document.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+      }, { passive: false });
 
-    function getAllPages() {
-      return document.querySelectorAll('section');
-    }
+      function handleSwipe() {
+        const xDiff = touchEndX - touchStartX;
+        const yDiff = touchEndY - touchStartY;
 
-    function getCurrentPageIndex() {
-      const pages = getAllPages();
-      let currentIndex = 0, minDistance = Infinity;
-      pages.forEach((page, index) => {
-        const distance = Math.abs(page.getBoundingClientRect().top);
-        if (distance < minDistance) {
-          minDistance = distance;
-          currentIndex = index;
+        // Check if horizontal movement is greater than vertical movement
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+          // It is a horizontal swipe
+          if (Math.abs(xDiff) > minSwipeDistance) {
+            if (xDiff < 0) {
+              // Swiped Left -> Go Next
+              goToNextPage();
+            } else {
+              // Swiped Right -> Go Previous
+              goToPreviousPage();
+            }
+          }
         }
-      });
-      return currentIndex;
-    }
+      }
 
-    function scrollToPage(index) {
-      const pages = getAllPages();
-      if (pages[index]) pages[index].scrollIntoView({ behavior: 'smooth' });
-    }
+      function getAllPages() {
+        // targeting all main sections that act as pages
+        return document.querySelectorAll('section');
+      }
 
-    function goToNextPage() {
-      scrollToPage(getCurrentPageIndex() + 1);
-    }
+      function getCurrentPageIndex() {
+        const pages = getAllPages();
+        let currentIndex = 0;
+        let minDistance = Infinity;
 
-    function goToPreviousPage() {
-      scrollToPage(getCurrentPageIndex() - 1);
-    }
-  });
-</script>
+        // Find the page closest to the top of the viewport
+        pages.forEach((page, index) => {
+          const rect = page.getBoundingClientRect();
+          // We check which page's top is closest to 0 (top of viewport)
+          // or we can check which page is mostly visible.
+          // Simple approach: distance of page top from viewport top
+          const distance = Math.abs(rect.top);
+          if (distance < minDistance) {
+            minDistance = distance;
+            currentIndex = index;
+          }
+        });
+        return currentIndex;
+      }
+
+      function scrollToPage(index) {
+        const pages = getAllPages();
+        if (index >= 0 && index < pages.length) {
+          pages[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      function goToNextPage() {
+        const currentIndex = getCurrentPageIndex();
+        scrollToPage(currentIndex + 1);
+      }
+
+      function goToPreviousPage() {
+        const currentIndex = getCurrentPageIndex();
+        scrollToPage(currentIndex - 1);
+      }
+    });
+  </script>
 
 </body>
+
 </html>
